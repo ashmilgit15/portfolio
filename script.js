@@ -1,6 +1,7 @@
 const navToggleButton = document.getElementById('navToggle');
 const siteNav = document.getElementById('siteNav');
 const copyEmailButton = document.getElementById('copyEmail');
+const copyPhoneButton = document.getElementById('copyPhone');
 const yearSpan = document.getElementById('year');
 
 if (yearSpan) {
@@ -33,6 +34,21 @@ if (copyEmailButton) {
             console.error('Clipboard failed', err);
             copyEmailButton.textContent = 'Copy failed';
             setTimeout(() => (copyEmailButton.textContent = 'Copy email'), 1400);
+        }
+    });
+}
+
+if (copyPhoneButton) {
+    copyPhoneButton.addEventListener('click', async () => {
+        const phone = copyPhoneButton.getAttribute('data-phone');
+        try {
+            await navigator.clipboard.writeText(phone || '');
+            copyPhoneButton.textContent = 'Copied!';
+            setTimeout(() => (copyPhoneButton.textContent = 'Copy phone'), 1400);
+        } catch (err) {
+            console.error('Clipboard failed', err);
+            copyPhoneButton.textContent = 'Copy failed';
+            setTimeout(() => (copyPhoneButton.textContent = 'Copy phone'), 1400);
         }
     });
 }
