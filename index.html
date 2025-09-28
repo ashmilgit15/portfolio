@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Classic Portfolio</title>
+    <meta name="description" content="Personal portfolio" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="#home" class="brand display-name" aria-label="Home">Ashmil</a>
+            <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav"
+                aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <nav id="siteNav" class="site-nav" role="navigation">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="home" class="site-main">
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <h1>Hi, I’m <span class="display-name">Ashmil</span></h1>
+                    <p class="lead">Software Engineer • Building reliable, user‑centric web apps.</p>
+                    <div class="hero-cta">
+                        <a href="#projects" class="btn primary">View Projects</a>
+                        <a href="#contact" class="btn">Contact</a>
+                    </div>
+                </div>
+                <div class="hero-media" aria-hidden="true">
+                    <div class="avatar">A</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About</h2>
+                <p>
+                    I’m an AI‑centric, vibe‑driven coder who builds intelligent experiences.
+                    I craft LLM‑powered apps, autonomous agents, and RAG pipelines with clean, reliable code
+                    and a focus on real‑world impact.
+                </p>
+                <ul class="tags" aria-label="Skills">
+                    <li>Python</li>
+                    <li>JavaScript</li>
+                    <li>PyTorch</li>
+                    <li>TensorFlow</li>
+                    <li>LangChain</li>
+                    <li>OpenAI API</li>
+                    <li>RAG</li>
+                    <li>Vector DBs</li>
+                    <li>MLOps</li>
+                    <li>Docker</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="projects" class="section alt">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="grid">
+                    <article class="card">
+                        <h3>RAG Search Portal</h3>
+                        <p>Retrieval‑augmented search over docs with embeddings, reranking, and chat UI.</p>
+                        <div class="card-actions">
+                            <a class="btn small" href="./rag.html#demo">Live</a>
+                            <a class="btn small outline" href="./rag.html#code">Code</a>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <h3>Autonomous Task Agent</h3>
+                        <p>Multi‑step agent executes goals with planning, tooling, and memory for context.</p>
+                        <div class="card-actions">
+                            <a class="btn small" href="./agent.html#demo">Live</a>
+                            <a class="btn small outline" href="./agent.html#code">Code</a>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <h3>AI Code Reviewer</h3>
+                        <p>LLM‑assisted static review comments with risk scoring and quick‑fix suggestions.</p>
+                        <div class="card-actions">
+                            <a class="btn small" href="./reviewer.html#demo">Live</a>
+                            <a class="btn small outline" href="./reviewer.html#code">Code</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <h2>Contact</h2>
+                <p>Want to collaborate or chat? I’d love to hear from you.</p>
+                <div class="contact-actions">
+                    <a class="btn primary" href="mailto:ashmildax@gmail.com">Email me</a>
+                    <button id="copyEmail" class="btn" data-email="ashmildax@gmail.com">Copy email</button>
+                    <a class="btn outline" href="https://www.linkedin.com/search/results/all/?keywords=Ashmil%20P"
+                        target="_blank" rel="noreferrer noopener">LinkedIn: Ashmil P</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>© <span id="year"></span> Ashmil</span>
+            <a href="#home" class="back-to-top">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

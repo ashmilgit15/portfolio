@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Code Reviewer • Ashmil</title>
+    <meta name="description" content="AI code reviewer demo by Ashmil" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="./index.html#projects" class="brand display-name" aria-label="Back">Ashmil</a>
+            <nav class="site-nav" role="navigation">
+                <ul>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#code">Code</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <h1>AI Code Reviewer</h1>
+                    <p class="lead">LLM‑assisted static review with risk scoring and quick‑fix hints.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="section">
+            <div class="container">
+                <h2>Demo</h2>
+                <p>Paste code to get mock review comments and a simple risk score.</p>
+                <div class="card">
+                    <label for="code">Code</label>
+                    <textarea id="code"
+                        style="width:100%;height:160px;border-radius:10px;border:1px solid var(--border);padding:12px;background:var(--panel);color:var(--text)"
+                        placeholder="function add(a,b){return a+b}"></textarea>
+                    <button id="review" class="btn primary" style="margin-top:10px">Review</button>
+                    <div id="output" style="margin-top:12px;color:var(--muted)"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="code" class="section alt">
+            <div class="container">
+                <h2>Code</h2>
+                <p>Static heuristics simulate review. Replace with server endpoint backed by an LLM.</p>
+                <pre class="card" style="overflow:auto"><code>// See inline script for a basic reviewer</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>© <span id="year"></span> Ashmil</span>
+            <a href="#demo" class="back-to-top">Back to demo ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        function analyze(code) {
+            const issues = [];
+            if (/var\s+/.test(code)) issues.push({ type: 'style', msg: 'Prefer let/const over var.' });
+            if (/==[^=]/.test(code)) issues.push({ type: 'bug', msg: 'Use strict equality (===).' });
+            if (!/{[\s\S]*}/.test(code)) issues.push({ type: 'nit', msg: 'Wrap function bodies in braces.' });
+            const risk = Math.min(100, issues.length * 30);
+            return { issues, risk };
+        }
+
+        const btn = document.getElementById('review');
+        const ta = document.getElementById('code');
+        const out = document.getElementById('output');
+        const yearSpan = document.getElementById('year');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+        btn?.addEventListener('click', () => {
+            out.textContent = '';
+            const code = (ta?.value || '').trim();
+            if (!code) { out.textContent = 'Paste some code to review.'; return; }
+            const { issues, risk } = analyze(code);
+            const lines = [
+                `Risk score: ${risk}/100`,
+                ...issues.map((i, idx) => `${idx + 1}. [${i.type}] ${i.msg}`),
+                issues.length === 0 ? 'No issues found. Looks good!' : ''
+            ].filter(Boolean);
+            out.innerHTML = lines.join('<br>');
+        });
+    </script>
+</body>
+
+</html>

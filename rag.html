@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG Search Portal • Ashmil</title>
+    <meta name="description" content="Retrieval-augmented search demo by Ashmil" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="./index.html#projects" class="brand display-name" aria-label="Back">Ashmil</a>
+            <nav class="site-nav" role="navigation">
+                <ul>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#code">Code</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <h1>RAG Search Portal</h1>
+                    <p class="lead">Retrieval‑augmented search over docs with embeddings, reranking, and chat UI.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="section">
+            <div class="container">
+                <h2>Demo</h2>
+                <p>Type a query; the demo fetches the best matching snippet from a small in‑memory corpus.</p>
+                <div class="card">
+                    <label for="q">Query</label>
+                    <input id="q"
+                        style="width:100%;height:40px;border-radius:10px;border:1px solid var(--border);padding:0 12px;background:var(--panel);color:var(--text)"
+                        placeholder="e.g. how to deploy" />
+                    <button id="searchBtn" class="btn primary" style="margin-top:10px">Search</button>
+                    <div id="result" style="margin-top:12px;color:var(--muted)"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="code" class="section alt">
+            <div class="container">
+                <h2>Code</h2>
+                <p>Minimal client‑side mock showing vector‑like matching (cosine on bag‑of‑words) for the demo.</p>
+                <pre class="card" style="overflow:auto"><code>// See inline script at bottom of this page
+// In production this integrates with an embeddings service + vector DB</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>© <span id="year"></span> Ashmil</span>
+            <a href="#demo" class="back-to-top">Back to demo ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        const docs = [
+            { id: 1, text: 'Deploy with Docker and GitHub Actions to a VPS securely.' },
+            { id: 2, text: 'Build a RAG pipeline with OpenAI embeddings and a vector database.' },
+            { id: 3, text: 'Tune prompts for an autonomous agent with tool use and memory.' },
+            { id: 4, text: 'Set up CI to run unit tests and static analysis on each PR.' }
+        ];
+
+        function tokenize(s) {
+            return s.toLowerCase().match(/[a-z0-9]+/g) || [];
+        }
+
+        function toVector(tokens) {
+            const map = new Map();
+            tokens.forEach(t => map.set(t, (map.get(t) || 0) + 1));
+            return map;
+        }
+
+        function cosine(a, b) {
+            let dot = 0, na = 0, nb = 0;
+            a.forEach((va, k) => {
+                na += va * va;
+                const vb = b.get(k) || 0;
+                dot += va * vb;
+            });
+            b.forEach(vb => nb += vb * vb);
+            return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+        }
+
+        const vectors = docs.map(d => ({ id: d.id, vec: toVector(tokenize(d.text)) }));
+
+        const qInput = document.getElementById('q');
+        const resultDiv = document.getElementById('result');
+        const btn = document.getElementById('searchBtn');
+        const yearSpan = document.getElementById('year');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        btn?.addEventListener('click', () => {
+            const q = (qInput?.value || '').trim();
+            if (!q) { resultDiv.textContent = 'Enter a query.'; return; }
+            const qVec = toVector(tokenize(q));
+            let best = null;
+            for (const d of vectors) {
+                const score = cosine(qVec, d.vec);
+                if (!best || score > best.score) best = { id: d.id, score };
+            }
+            const doc = docs.find(x => x.id === best.id);
+            resultDiv.innerHTML = `<strong>Top match</strong> (score ${best.score.toFixed(2)}):<br>${doc.text}`;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autonomous Task Agent • Ashmil</title>
+    <meta name="description" content="Autonomous agent demo by Ashmil" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="./index.html#projects" class="brand display-name" aria-label="Back">Ashmil</a>
+            <nav class="site-nav" role="navigation">
+                <ul>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#code">Code</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <h1>Autonomous Task Agent</h1>
+                    <p class="lead">Goal‑oriented agent that plans steps, calls tools, and stores memory.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="section">
+            <div class="container">
+                <h2>Demo</h2>
+                <p>Enter a goal. The demo simulates a plan and tool calls (search, summarize).</p>
+                <div class="card">
+                    <label for="goal">Goal</label>
+                    <input id="goal"
+                        style="width:100%;height:40px;border-radius:10px;border:1px solid var(--border);padding:0 12px;background:var(--panel);color:var(--text)"
+                        placeholder="e.g. research Docker best practices" />
+                    <button id="runAgent" class="btn primary" style="margin-top:10px">Run Agent</button>
+                    <div id="log" style="margin-top:12px;color:var(--muted);white-space:pre-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="code" class="section alt">
+            <div class="container">
+                <h2>Code</h2>
+                <p>Simulated planning/tool loop. Replace with LLM + real tools in production.</p>
+                <pre class="card" style="overflow:auto"><code>// See inline script for a minimal agent loop</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>© <span id="year"></span> Ashmil</span>
+            <a href="#demo" class="back-to-top">Back to demo ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        const memory = [];
+
+        function plan(goal) {
+            const steps = [
+                'Understand the goal',
+                'Search for relevant resources',
+                'Summarize key findings',
+                'Produce next actions'
+            ];
+            return steps;
+        }
+
+        async function toolSearch(query) {
+            await new Promise(r => setTimeout(r, 400));
+            return `Results for "${query}": Docker docs, security guide, production checklist.`;
+        }
+
+        async function toolSummarize(text) {
+            await new Promise(r => setTimeout(r, 300));
+            return 'Summary: Favor least privilege, slim images, signed builds, and SBOMs.';
+        }
+
+        function logLine(el, text) {
+            el.textContent += `\n${text}`;
+        }
+
+        const btn = document.getElementById('runAgent');
+        const goalInput = document.getElementById('goal');
+        const logEl = document.getElementById('log');
+        const yearSpan = document.getElementById('year');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+        btn?.addEventListener('click', async () => {
+            logEl.textContent = '';
+            const goal = (goalInput?.value || '').trim();
+            if (!goal) { logLine(logEl, 'Enter a goal.'); return; }
+            logLine(logEl, `Goal: ${goal}`);
+            const steps = plan(goal);
+            logLine(logEl, 'Plan: ' + steps.join(' → '));
+            const search = await toolSearch(goal);
+            logLine(logEl, 'Tool: search');
+            memory.push({ type: 'search', text: search });
+            const summary = await toolSummarize(search);
+            logLine(logEl, 'Tool: summarize');
+            memory.push({ type: 'summary', text: summary });
+            logLine(logEl, 'Memory saved: ' + memory.length + ' items');
+            logLine(logEl, 'Output: ' + summary);
+        });
+    </script>
+</body>
+
+</html>
