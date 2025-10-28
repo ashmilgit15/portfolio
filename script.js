@@ -14,13 +14,24 @@ const cursorGlow = document.querySelector('.cursor-glow');
 // Detect mobile device early
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
+// Ensure mobile projects are visible immediately
+if (isMobile) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.section, .card-3d, .card').forEach(el => {
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+            el.style.transform = 'none';
+        });
+    });
+}
+
 // ============================================
 // LOADING SCREEN
 // ============================================
 window.addEventListener('load', () => {
     setTimeout(() => {
         loader.classList.add('hidden');
-    }, 1500);
+    }, isMobile ? 800 : 1500); // Faster loading on mobile
 });
 
 // ============================================
@@ -232,9 +243,9 @@ if (typeof THREE !== 'undefined') {
 }
 
 // ============================================
-// GSAP SCROLL ANIMATIONS
+// GSAP SCROLL ANIMATIONS (Desktop Only)
 // ============================================
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !isMobile) {
     gsap.registerPlugin(ScrollTrigger);
     
     // Animate sections on scroll
@@ -291,11 +302,12 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         });
     });
 } else {
-    // Fallback: ensure all elements are visible if GSAP doesn't load
-    console.log('GSAP not loaded - using fallback styles');
+    // Mobile or GSAP not loaded: ensure all elements are visible
+    console.log(isMobile ? 'Mobile device - skipping GSAP animations' : 'GSAP not loaded - using fallback styles');
     document.querySelectorAll('.section, .card-3d').forEach(el => {
         el.style.opacity = '1';
         el.style.visibility = 'visible';
+        el.style.transform = 'none';
     });
 }
 
