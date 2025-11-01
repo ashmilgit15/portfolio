@@ -82,7 +82,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe sections and cards
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('.section');
+    const sections = document.querySelectorAll('.section, .project-section');
     const cards = document.querySelectorAll('.card-3d');
     
     sections.forEach(section => {
@@ -94,6 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
         card.classList.add('reveal-element');
         card.style.transitionDelay = `${i * 0.1}s`;
         observer.observe(card);
+    });
+    
+    // Observe feature items in Habit Garden section
+    const featureItems = document.querySelectorAll('.feature-item');
+    featureItems.forEach((item, i) => {
+        item.classList.add('reveal-element');
+        item.style.transitionDelay = `${i * 0.1}s`;
+        observer.observe(item);
     });
 });
 
@@ -252,6 +260,40 @@ window.addEventListener('scroll', () => {
             ticking = false;
         });
         ticking = true;
+    }
+});
+
+// ============================================
+// HABIT GARDEN MODAL FUNCTIONS
+// ============================================
+function showHabitGardenDemo() {
+    const modal = document.getElementById('habitGardenModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+function closeHabitGardenDemo() {
+    const modal = document.getElementById('habitGardenModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('habitGardenModal');
+    if (modal && event.target === modal) {
+        closeHabitGardenDemo();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeHabitGardenDemo();
     }
 });
 
